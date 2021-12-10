@@ -53,6 +53,14 @@ public:
 
 	void onSliderChange(wxCommandEvent& evt);
 
+	void onInputFileButtonClick(wxCommandEvent& evt);
+
+	void onCppCheckBoxActivate(wxCommandEvent& evt);
+
+	void onAsmCheckBoxActivate(wxCommandEvent& evt);
+
+	void onRunButtonClick(wxCommandEvent& evt);
+
 	wxDECLARE_EVENT_TABLE();
 
 };
