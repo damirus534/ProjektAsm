@@ -34,18 +34,15 @@ public:
 	//labele stale
 	wxStaticText* cppLabel = nullptr;
 	wxStaticText* asmLabel = nullptr;
-	wxStaticText* avarageTimeLabel = nullptr;
-	wxStaticText* previousTimeLabel = nullptr;
+	wxStaticText* TimeLabel = nullptr;
 	wxStaticText* oneOnSlider = nullptr;
 	wxStaticText* sixtyFourOnSlider = nullptr;
 
 	//labele zmienne
 	wxStaticText* inputFileNameLabel = nullptr;
 	wxStaticText* outputFileNameLabel = nullptr;
-	wxStaticText* cppAvarageTimeLabel = nullptr;
-	wxStaticText* cppLastTimeLabel = nullptr;
-	wxStaticText* asmAvarageTimeLabel = nullptr;
-	wxStaticText* asmLastTimeLabel = nullptr;
+	wxStaticText* cppTimeLabel = nullptr;
+	wxStaticText* asmTimeLabel = nullptr;
 	wxStaticText* currentValueOnSlider = nullptr;
 
 	//slider
@@ -60,6 +57,8 @@ public:
 	void onAsmCheckBoxActivate(wxCommandEvent& evt);
 
 	void onRunButtonClick(wxCommandEvent& evt);
+
+	void onOpenOutputFileButton(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 
