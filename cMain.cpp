@@ -20,6 +20,7 @@ wxEND_EVENT_TABLE()
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "ProjektAsm", wxPoint(720, 360),wxSize(480,360)) {
 
+
 	//przyciski
 	inputFileButton = new wxButton(this, 20, "Wgraj plik", wxPoint(10, 10), wxSize(120, 30));
 	openOutputFileButton = new wxButton(this, 21, "Otworz plik", wxPoint(10, 50), wxSize(120, 30));
@@ -101,6 +102,10 @@ void cMain::onOpenOutputFileButton(wxCommandEvent& evt) {
 
 void cMain::onRunButtonClick(wxCommandEvent& evt) {
 
+	dllHandle = LoadLibrary(L"AsmGausEliminationLib.dll");
+
+	AsmGausEliminationLib asmGausEliminationLib = (AsmGausEliminationLib)GetProcAddress(dllHandle, "AsmGausEliminationLib");
+
 	wxString inputInWxString = inputFileNameLabel->GetLabelText();
 	std::string input = std::string(inputInWxString.mb_str());
 	std::ifstream file(input, std::ios::in);
@@ -181,7 +186,12 @@ void cMain::onRunButtonClick(wxCommandEvent& evt) {
 			//gdy ilosc threadow jest wieksza niz liczba rownan
 			if (threadNumber >= myLinearEquationCounter) {
 				for (int k = myLinearEquationCounter; k > 0; k--) {
-					myThreads.push_back(std::thread(CppGausEliminationLib, myWholeArray[myLinearEquationCounter - k], wektorRozmiarowX[myLinearEquationCounter - k], wektorRozmiarowY[myLinearEquationCounter - k], myResultArray[myLinearEquationCounter - k]));
+					if (asmCheckBox->GetValue() == false && cppCheckBox->GetValue() ==true) {
+						myThreads.push_back(std::thread(CppGausEliminationLib, myWholeArray[myLinearEquationCounter - k], wektorRozmiarowX[myLinearEquationCounter - k], wektorRozmiarowY[myLinearEquationCounter - k], myResultArray[myLinearEquationCounter - k]));
+					}
+					else {
+						myThreads.push_back(std::thread(asmGausEliminationLib, myWholeArray[myLinearEquationCounter - k], wektorRozmiarowX[myLinearEquationCounter - k], wektorRozmiarowY[myLinearEquationCounter - k], myResultArray[myLinearEquationCounter - k]));
+					}
 				}
 				int i;
 				auto startTimer = std::chrono::high_resolution_clock::now();
@@ -195,7 +205,12 @@ void cMain::onRunButtonClick(wxCommandEvent& evt) {
 			}
 			else {//gdy ilosc threadow jest mniejsza niz liczba rownan
 				for (int k = threadNumber; k > 0; k--) {
-					myThreads.push_back(std::thread(CppGausEliminationLib, myWholeArray[myLinearEquationCounter - k], wektorRozmiarowX[myLinearEquationCounter - k], wektorRozmiarowY[myLinearEquationCounter - k], myResultArray[myLinearEquationCounter - k]));
+					if (asmCheckBox->GetValue() == false && cppCheckBox->GetValue() == true) {
+						myThreads.push_back(std::thread(CppGausEliminationLib, myWholeArray[myLinearEquationCounter - k], wektorRozmiarowX[myLinearEquationCounter - k], wektorRozmiarowY[myLinearEquationCounter - k], myResultArray[myLinearEquationCounter - k]));
+					}
+					else {
+						myThreads.push_back(std::thread(asmGausEliminationLib, myWholeArray[myLinearEquationCounter - k], wektorRozmiarowX[myLinearEquationCounter - k], wektorRozmiarowY[myLinearEquationCounter - k], myResultArray[myLinearEquationCounter - k]));
+					}
 				}
 				int i;
 				auto startTimer = std::chrono::high_resolution_clock::now();

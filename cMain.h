@@ -1,5 +1,9 @@
 #pragma once
-#include "wx/wx.h"
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
+
 
 class cMain : public wxFrame
 {
@@ -12,7 +16,9 @@ public:
 		return this->myFont;
 	}
 
-
+	//loading asm dll
+	typedef int(_fastcall* AsmGausEliminationLib)(float* tablicaJednowymiarowa, int xLength, int yLength, float* tablicaWynikow);
+	HINSTANCE dllHandle = NULL;
 
 	//constructor
 	cMain();

@@ -9,6 +9,7 @@ public:
 	cApp();
 	~cApp();
 
+
 private:
 	cMain* m_frame1 = nullptr;
 
