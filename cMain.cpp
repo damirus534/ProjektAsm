@@ -36,7 +36,8 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "ProjektAsm", wxPoint(720, 360),wxSi
 
 
 	//slider
-	slider = new wxSlider(this, 22, 1, 1, 64, wxPoint(20, 190), wxSize(420, 25));
+	unsigned int nthreads = std::thread::hardware_concurrency();
+	slider = new wxSlider(this, 22, nthreads, 1, 64, wxPoint(20, 190), wxSize(420, 25));
 
 	//labele stale
 	cppLabel = new wxStaticText(this, wxID_ANY, "c++", wxPoint(250, 120), wxSize(25, 15));
@@ -46,16 +47,19 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "ProjektAsm", wxPoint(720, 360),wxSi
 	sixtyFourOnSlider = new wxStaticText(this, wxID_ANY, "64", wxPoint(440, 198), wxSize(20, 20));
 
 	//labele zmienne
-	currentValueOnSlider = new wxStaticText(this, wxID_ANY, "1", wxPoint(220, 215), wxSize(20, 20));
+	wxString nthreadsInWxString = wxString::Format(wxT("%i"), nthreads);
+	currentValueOnSlider = new wxStaticText(this, wxID_ANY, nthreadsInWxString, wxPoint(220, 215), wxSize(20, 20));
 	inputFileNameLabel = new wxStaticText(this, wxID_ANY, "", wxPoint(135, 16), wxSize(120, 20));
 	outputFileNameLabel = new wxStaticText(this, wxID_ANY, "", wxPoint(135, 56), wxSize(120, 20));
 	cppTimeLabel = new wxStaticText(this, wxID_ANY, "", wxPoint(350, 120), wxSize(25, 15));
+	asmTimeLabel = new wxStaticText(this, wxID_ANY, "", wxPoint(350, 140), wxSize(25, 15));
 
 	//ustawienie fonta w labelach
 	cppLabel->SetFont(myFont);
 	asmLabel->SetFont(myFont);
 	TimeLabel->SetFont(myFont);
 	cppTimeLabel->SetFont(myFont);
+	asmTimeLabel->SetFont(myFont);
 
 
 }
@@ -227,7 +231,13 @@ void cMain::onRunButtonClick(wxCommandEvent& evt) {
 		wxString wynik;
 		double timeInMilisec = 1.0* timeInMicrosec / 1000;
 		wynik<< timeInMilisec;
-		cppTimeLabel->SetLabelText(wynik);
+		if (asmCheckBox->GetValue() == false && cppCheckBox->GetValue() == true) {
+			cppTimeLabel->SetLabelText(wynik);
+		}
+		else {
+			asmTimeLabel->SetLabelText(wynik);
+		}
+		
 		std::ofstream file("result.txt");
 		if (file.is_open()) {
 			for (int i = 0; i < wektorRozmiarow.size(); i++) {
